@@ -31,34 +31,34 @@ public class ClienteSocket {
         this.port=port;
     }
     
-    public void Connect_Action(){
-        
+    public void Connect_Action(ConexionEvent ev){
+        socket = (Socket)ev.getSource();
     }
     
-    public void NoConnect_Action(){
-        
+    public void NoConnect_Action(ConexionEvent ev){
+        System.err.println(ev.toString());
     }
     
-    private void iniciarConnectionManager(){
+    public void iniciarConnectionManager(){
         Conexion conexion = new Conexion(ip, port, nroIntentos);
         conexion.addListenerEvent(new ConexionListener() {
-            
             @Override
             public void onConnect(ConexionEvent ev) {
-                Connect_Action();
+                Connect_Action(ev);
             }
 
             @Override
             public void onNotConnect(ConexionEvent ev) {
-                NoConnect_Action();
+                NoConnect_Action(ev);
             }
         });
         
-        conexion.Conectar();
+        conexion.Conectar(); // metodo que lanza un hilo
+        System.out.println("prueba si pasa el metodo");
         
-        Runnable conRun = new ConnectionManager(socket);
-        Thread hilo = new Thread(conRun);
-        hilo.start();
+//        Runnable conRun = new ConnectionManager(socket);
+//        Thread hilo = new Thread(conRun);
+//        hilo.start();
     }
     
 }
