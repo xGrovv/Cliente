@@ -41,6 +41,11 @@ public class Cliente extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btConectar.setText("Conectar");
+        btConectar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btConectarActionPerformed(evt);
+            }
+        });
 
         txIp.setText("192.168.1.33");
 
@@ -119,6 +124,13 @@ public class Cliente extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConectarActionPerformed
+        // TODO add your handling code here:
+        String ip = txIp.getText();
+        int port = Integer.parseInt(txPort.getText());
+        ClienteSocket clienteSocket = new ClienteSocket(ip, port);
+    }//GEN-LAST:event_btConectarActionPerformed
 
     /**
      * @param args the command line arguments
