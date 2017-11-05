@@ -39,6 +39,7 @@ public class Cliente extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Cliente Socket");
 
         btConectar.setText("Conectar");
         btConectar.addActionListener(new java.awt.event.ActionListener() {

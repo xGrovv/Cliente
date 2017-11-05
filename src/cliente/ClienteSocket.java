@@ -22,8 +22,8 @@ import java.util.logging.Logger;
 public class ClienteSocket {
     
     private Socket socket=null;
-    private String ip;
-    private int port;
+    private final String ip;
+    private final int port;
     private final int nroIntentos=4;
     
     public ClienteSocket(String ip, int port){
@@ -33,6 +33,9 @@ public class ClienteSocket {
     
     public void Connect_Action(ConexionEvent ev){
         socket = (Socket)ev.getSource();
+        Runnable connectionManager = new ConnectionManager(socket);
+        Thread hilo = new Thread(connectionManager);
+        hilo.start();
     }
     
     public void NoConnect_Action(ConexionEvent ev){
@@ -56,9 +59,7 @@ public class ClienteSocket {
         conexion.Conectar(); // metodo que lanza un hilo
         System.out.println("prueba si pasa el metodo");
         
-//        Runnable conRun = new ConnectionManager(socket);
-//        Thread hilo = new Thread(conRun);
-//        hilo.start();
+        
     }
     
 }
