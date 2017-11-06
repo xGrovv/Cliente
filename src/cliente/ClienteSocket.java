@@ -76,6 +76,7 @@ public class ClienteSocket {
         try {
             DataOutputStream out = new DataOutputStream (socket.getOutputStream());
             TaskSend messageSend = new TaskSend(out, mensaje);
+            messageSend.start();
         } catch (IOException ex) {
             Logger.getLogger(ClienteSocket.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -14,14 +14,19 @@ import java.util.logging.Logger;
  *
  * @author Grover
  */
-public class TaskSend {
+public class TaskSend extends Thread {
     
     private DataOutputStream out=null;
-    private String mensaje;
+    private final String mensaje;
     
     public TaskSend(DataOutputStream dataOut, String mensaje){
         this.out=dataOut;
         this.mensaje=mensaje;
+        
+    }
+    
+    @Override
+    public void run() {
         try {
             out.writeUTF(this.mensaje);
         } catch (IOException ex) {
