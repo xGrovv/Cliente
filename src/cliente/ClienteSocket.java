@@ -7,6 +7,8 @@ package cliente;
 
 import eventos.ConexionEvent;
 import eventos.ConexionListener;
+import eventos.ServerManagerEvent;
+import eventos.ServerManagerListener;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -31,8 +33,21 @@ public class ClienteSocket {
     
     public void Connect_Action(ConexionEvent ev){
         socket = (Socket)ev.getSource();
-        Runnable connectionManager = new ConnectionManager(socket);
-        Thread hilo = new Thread(connectionManager);
+        ServerManager server = new ServerManager(socket);
+        server.addListenerEvent(new ServerManagerListener() {
+            @Override
+            public void onDisconnectClient(ServerManagerEvent ev) {
+                // mandar a reconectar
+                System.out.println("se Perdio la conexion con el servidoe servidor: "+ ev.toString());
+            }
+            @Override
+            public void onReceiveMessage(ServerManagerEvent ev) {
+                System.out.println("mensaje del servidor: "+ (String)ev.getSource());
+            }
+        });
+        
+        Runnable serverManager = server;
+        Thread hilo = new Thread(serverManager);
         hilo.start();
     }
     
@@ -40,7 +55,7 @@ public class ClienteSocket {
         System.err.println(ev.toString());
     }
     
-    public void iniciarConnectionManager(){
+    public void iniciar(){
         Conexion conexion = new Conexion(ip, port, nroIntentos);
         conexion.addListenerEvent(new ConexionListener() {
             @Override

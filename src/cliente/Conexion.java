@@ -72,7 +72,7 @@ public class Conexion extends Thread {
                 ListIterator li = listeners.listIterator();
                 while (li.hasNext()) {
                     ConexionListener listener = (ConexionListener) li.next();
-                    ConexionEvent evObj = new ConexionEvent(new String(ex.getMessage()));
+                    ConexionEvent evObj = new ConexionEvent(ex.getMessage());
                     (listener).onNotConnect(evObj);
                 }
                 pasatiempo();

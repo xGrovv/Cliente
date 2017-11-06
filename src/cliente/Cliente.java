@@ -50,7 +50,7 @@ public class Cliente extends javax.swing.JFrame {
             }
         });
 
-        txIp.setText("192.168.1.33");
+        txIp.setText("127.0.0.1");
 
         txPort.setText("4455");
 
@@ -138,7 +138,7 @@ public class Cliente extends javax.swing.JFrame {
         String ip = txIp.getText();
         int port = Integer.parseInt(txPort.getText());
         clienteSocket = new ClienteSocket(ip, port);
-        clienteSocket.iniciarConnectionManager();
+        clienteSocket.iniciar();
     }//GEN-LAST:event_btConectarActionPerformed
 
     private void btEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEnviarActionPerformed
