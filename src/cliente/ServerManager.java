@@ -54,7 +54,6 @@ public class ServerManager implements Runnable{
         while (connected){
             try {
                 String mensaje = in.readUTF();
-                
                 ListIterator li = listeners.listIterator();
                 while (li.hasNext()) {
                     ServerManagerListener listener = (ServerManagerListener) li.next();
