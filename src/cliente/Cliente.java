@@ -11,6 +11,8 @@ package cliente;
  */
 public class Cliente extends javax.swing.JFrame {
 
+    ClienteSocket clienteSocket;
+    
     /**
      * Creates new form Cliente
      */
@@ -87,6 +89,11 @@ public class Cliente extends javax.swing.JFrame {
         );
 
         btEnviar.setText("Enviar");
+        btEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEnviarActionPerformed(evt);
+            }
+        });
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -130,9 +137,14 @@ public class Cliente extends javax.swing.JFrame {
         // TODO add your handling code here:
         String ip = txIp.getText();
         int port = Integer.parseInt(txPort.getText());
-        ClienteSocket clienteSocket = new ClienteSocket(ip, port);
+        clienteSocket = new ClienteSocket(ip, port);
         clienteSocket.iniciarConnectionManager();
     }//GEN-LAST:event_btConectarActionPerformed
+
+    private void btEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEnviarActionPerformed
+        // TODO add your handling code here:
+        clienteSocket.EnviarMenasaje(txEnviar.getText());
+    }//GEN-LAST:event_btEnviarActionPerformed
 
     /**
      * @param args the command line arguments

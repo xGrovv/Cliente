@@ -39,6 +39,7 @@ public class ConnectionManager implements Runnable{
         while (conected){
             try {
                 String mensaje = in.readUTF();
+                System.out.println("mensaje del servidor: "+ mensaje);
             }catch (SocketException exSo){
                 System.out.println("ERR:: "+ exSo.getMessage());
                 conected=false;

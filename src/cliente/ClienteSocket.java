@@ -7,10 +7,8 @@ package cliente;
 
 import eventos.ConexionEvent;
 import eventos.ConexionListener;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,9 +55,15 @@ public class ClienteSocket {
         });
         
         conexion.Conectar(); // metodo que lanza un hilo
-        System.out.println("prueba si pasa el metodo");
-        
-        
+    }
+    
+    public void EnviarMenasaje(String mensaje){
+        try {
+            DataOutputStream out = new DataOutputStream (socket.getOutputStream());
+            TaskSend messageSend = new TaskSend(out, mensaje);
+        } catch (IOException ex) {
+            Logger.getLogger(ClienteSocket.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
