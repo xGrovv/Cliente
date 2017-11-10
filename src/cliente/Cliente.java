@@ -5,6 +5,8 @@
  */
 package cliente;
 
+import java.awt.Color;
+
 /**
  *
  * @author Grover
@@ -18,6 +20,7 @@ public class Cliente extends javax.swing.JFrame {
      */
     public Cliente() {
         initComponents();
+        inicioComponentes();
     }
 
     /**
@@ -77,9 +80,8 @@ public class Cliente extends javax.swing.JFrame {
                     .addComponent(txIp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btDesconectar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btConectar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(lbPort, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                        .addComponent(txPort, javax.swing.GroupLayout.Alignment.LEADING)))
+                    .addComponent(lbPort, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txPort))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -99,6 +101,12 @@ public class Cliente extends javax.swing.JFrame {
                 .addComponent(btDesconectar)
                 .addContainerGap())
         );
+
+        txEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txEnviarActionPerformed(evt);
+            }
+        });
 
         btEnviar.setText("Enviar");
         btEnviar.addActionListener(new java.awt.event.ActionListener() {
@@ -145,17 +153,52 @@ public class Cliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void inicioComponentes() {        
+        txEnviar.setForeground(Color.BLACK);
+        btEnviar.setEnabled(false);
+        txEnviar.setEnabled(false);        
+        btConectar.setEnabled(true);
+        btDesconectar.setEnabled(false);        
+        jTextArea1.setEnabled(false);
+               
+    }
+    
+    private void iniciarConexion() {
+        btEnviar.setEnabled(true);
+        txEnviar.setEnabled(true);        
+        btConectar.setEnabled(false);
+        btDesconectar.setEnabled(true);
+        jTextArea1.setEnabled(true);
+    }
+    
+    private void cerrarConexion() {
+        btEnviar.setEnabled(false);
+        txEnviar.setEnabled(false);        
+        btConectar.setEnabled(true);
+        btDesconectar.setEnabled(false);
+        jTextArea1.setEnabled(false);
+    } 
+    
+    private void enviandoMsj(){
+         if (clienteSocket.EnviarMensaje(txEnviar.getText())) {
+            jTextArea1.append( "Cliente : " + txEnviar.getText()+ "\n");
+            txEnviar.setText("");
+            }
+    }
+    
     private void btConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConectarActionPerformed
         // TODO add your handling code here:
         String ip = txIp.getText();
         int port = Integer.parseInt(txPort.getText());
         clienteSocket = new ClienteSocket(ip, port);
         clienteSocket.iniciar();
+        iniciarConexion();
     }//GEN-LAST:event_btConectarActionPerformed
 
     private void btEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEnviarActionPerformed
         // TODO add your handling code here:
-        clienteSocket.EnviarMenasaje(txEnviar.getText());
+        clienteSocket.EnviarMensaje(txEnviar.getSelectedText());
+        ///boolean se=clienteSocket.EnviarMenasaje(txEnviar.getText());
     }//GEN-LAST:event_btEnviarActionPerformed
 
     private void btDesconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDesconectarActionPerformed
@@ -164,6 +207,13 @@ public class Cliente extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btDesconectarActionPerformed
 
+    private void txEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txEnviarActionPerformed
+        // TODO add your handling code here:
+        enviandoMsj();
+    }//GEN-LAST:event_txEnviarActionPerformed
+
+    
+    
     /**
      * @param args the command line arguments
      */

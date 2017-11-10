@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTextField;
 
 /**
  *
@@ -31,12 +32,27 @@ public class ClienteSocket {
     private ServerManager serverManager;
     private boolean deteniendo;
     
+    private String msjrec = "";    
+    private JTextField msjrecibido = new JTextField();
+    
     public ClienteSocket(String ip, int port){
         this.ip=ip;
         this.port=port;
         connectionObserver=null;
         serverManager=null;
         deteniendo=false;
+    }
+    
+    public Socket getSocket() {
+        return socket;
+    }
+    
+    public String getMsjrec() {
+        return msjrec;
+    }
+    //////////////
+    public JTextField getMsjrecibido() {
+        return msjrecibido;
     }
     
     public void Connect_Action(ConexionEvent ev){
@@ -56,6 +72,8 @@ public class ClienteSocket {
             @Override
             public void onReceiveMessage(ServerManagerEvent ev) {
                 System.out.println("mensaje del servidor: "+ (String)ev.getSource());
+                msjrec =  ( (String)ev.getSource() );
+                msjrecibido.setText(msjrec);
             }
         });
         
@@ -77,7 +95,7 @@ public class ClienteSocket {
     }
     
     public void NoConnect_Action(ConexionEvent ev){
-        System.err.println(ev.toString());
+        System.err.println("intento de conexion fallido::" +ev.toString());
     }
     
     public void iniciar(){
@@ -110,7 +128,7 @@ public class ClienteSocket {
         }
     }
     
-    public void EnviarMenasaje(String mensaje){
+    /*public void EnviarMenasaje(String mensaje){
         try {
             DataOutputStream out = new DataOutputStream (socket.getOutputStream());
             TaskSend messageSend = new TaskSend(out, mensaje);
@@ -118,6 +136,19 @@ public class ClienteSocket {
         } catch (IOException ex) {
             Logger.getLogger(ClienteSocket.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }*/
+    
+    public boolean EnviarMensaje(String mensaje){
+        boolean enviado = false;
+        try {
+            DataOutputStream out = new DataOutputStream (socket.getOutputStream());
+            TaskSend messageSend = new TaskSend(out, mensaje);
+            messageSend.start();
+            enviado =true;
+        } catch (IOException ex) {
+            Logger.getLogger(ClienteSocket.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return enviado;
     }
     
 }
