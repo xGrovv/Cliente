@@ -44,8 +44,17 @@ public class ServerManager implements Runnable{
         listeners.add(connectionManagertListener);
     }
     
-    public void Detener(){
-        connected=false;
+    public void removeListener(){
+        listeners.clear();
+    }
+    
+    public void detener(){
+        try {
+            connected=false;
+            in.close();
+        } catch (IOException ex) {
+            Logger.getLogger(ServerManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Override
@@ -60,17 +69,24 @@ public class ServerManager implements Runnable{
                     ServerManagerEvent evObj = new ServerManagerEvent(mensaje);
                     (listener).onReceiveMessage(evObj);
                 }
-            }catch (SocketException exSo){
+            }catch (SocketException exSo){  // por cierre de applicacion del server
+                System.out.println("El servidor detuvo el servicio:: "+ exSo.getMessage());
                 ListIterator li = listeners.listIterator();
                 while (li.hasNext()) {
                     ServerManagerListener listener = (ServerManagerListener) li.next();
                     ServerManagerEvent evObj = new ServerManagerEvent(exSo.getMessage());
                     (listener).onDisconnectClient(evObj);
                 }
-                System.out.println("ERR xxGG:: "+ exSo.getMessage());
+                
                 connected=false;
-            }catch (java.io.EOFException eofEx){
-                System.out.println("ERR:: el servidor detuvo el servicio"+ eofEx.getMessage());
+            }catch (java.io.EOFException eofEx){    // cierre de socket del servidor
+                System.out.println("ERR:: el servidor Cerro"+ eofEx.getMessage());
+                /*ListIterator li = listeners.listIterator();
+                while (li.hasNext()) {
+                    ServerManagerListener listener = (ServerManagerListener) li.next();
+                    ServerManagerEvent evObj = new ServerManagerEvent(eofEx.getMessage());
+                    (listener).onDisconnectClient(evObj);
+                }*/
                 connected=false;
             } catch (IOException ex) {
                 Logger.getLogger(ServerManager.class.getName()).log(Level.SEVERE, null, ex);

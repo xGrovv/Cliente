@@ -7,6 +7,8 @@ package cliente;
 
 import eventos.ConexionEvent;
 import eventos.ConexionListener;
+import eventos.ConnectionObserverEvent;
+import eventos.ConnectionObserverListener;
 import eventos.ServerManagerEvent;
 import eventos.ServerManagerListener;
 import java.io.DataOutputStream;
@@ -25,20 +27,31 @@ public class ClienteSocket {
     private final String ip;
     private final int port;
     private final int nroIntentos=4;
+    private ConnectionObserver connectionObserver;
+    private ServerManager serverManager;
+    private boolean deteniendo;
     
     public ClienteSocket(String ip, int port){
         this.ip=ip;
         this.port=port;
+        connectionObserver=null;
+        serverManager=null;
+        deteniendo=false;
     }
     
     public void Connect_Action(ConexionEvent ev){
         socket = (Socket)ev.getSource();
-        ServerManager server = new ServerManager(socket);
-        server.addListenerEvent(new ServerManagerListener() {
+        serverManager = new ServerManager(socket);
+        serverManager.addListenerEvent(new ServerManagerListener() {
             @Override
             public void onDisconnectClient(ServerManagerEvent ev) {
                 // mandar a reconectar
-                System.out.println("se Perdio la conexion con el servidoe servidor: "+ ev.toString());
+                if (!deteniendo){
+                    detener();
+                    iniciar();
+                }
+                deteniendo=false;
+                //System.out.println("se Perdio la conexion con el servidoe servidor: "+ ev.toString());
             }
             @Override
             public void onReceiveMessage(ServerManagerEvent ev) {
@@ -46,9 +59,21 @@ public class ClienteSocket {
             }
         });
         
-        Runnable serverManager = server;
-        Thread hilo = new Thread(serverManager);
+        Runnable serverManagerRun = serverManager;
+        Thread hilo = new Thread(serverManagerRun);
         hilo.start();
+        
+        connectionObserver= new ConnectionObserver(socket);
+        connectionObserver.addListener(new ConnectionObserverListener() {
+            @Override
+            public void onLostConnection(ConnectionObserverEvent ev) {
+                deteniendo=true;
+                detener();
+                iniciar();
+                
+            }
+        });
+        connectionObserver.iniciar();
     }
     
     public void NoConnect_Action(ConexionEvent ev){
@@ -70,6 +95,19 @@ public class ClienteSocket {
         });
         
         conexion.Conectar(); // metodo que lanza un hilo
+    }
+    
+    public void detener(){
+        try {
+            connectionObserver.detener();
+            serverManager.detener();
+            socket.close();
+            //this.finalze();
+        } catch (IOException ex) {
+            Logger.getLogger(ClienteSocket.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Throwable ex) {
+            Logger.getLogger(ClienteSocket.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void EnviarMenasaje(String mensaje){

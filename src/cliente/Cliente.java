@@ -35,6 +35,7 @@ public class Cliente extends javax.swing.JFrame {
         txPort = new javax.swing.JTextField();
         lbIp = new javax.swing.JLabel();
         lbPort = new javax.swing.JLabel();
+        btDesconectar = new javax.swing.JButton();
         txEnviar = new javax.swing.JTextField();
         btEnviar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -50,13 +51,20 @@ public class Cliente extends javax.swing.JFrame {
             }
         });
 
-        txIp.setText("192.168.43.38");
+        txIp.setText("192.168.43.34");
 
         txPort.setText("4455");
 
         lbIp.setText("IP");
 
         lbPort.setText("Puerto");
+
+        btDesconectar.setText("Desconectar");
+        btDesconectar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btDesconectarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -66,10 +74,12 @@ public class Cliente extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lbIp)
-                    .addComponent(lbPort)
+                    .addComponent(txIp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btDesconectar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btConectar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txPort)
-                    .addComponent(txIp))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(lbPort, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                        .addComponent(txPort, javax.swing.GroupLayout.Alignment.LEADING)))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -83,8 +93,10 @@ public class Cliente extends javax.swing.JFrame {
                 .addComponent(lbPort)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txPort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btConectar)
+                .addGap(7, 7, 7)
+                .addComponent(btDesconectar)
                 .addContainerGap())
         );
 
@@ -107,7 +119,7 @@ public class Cliente extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
@@ -146,6 +158,12 @@ public class Cliente extends javax.swing.JFrame {
         clienteSocket.EnviarMenasaje(txEnviar.getText());
     }//GEN-LAST:event_btEnviarActionPerformed
 
+    private void btDesconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDesconectarActionPerformed
+        // TODO add your handling code here:
+        clienteSocket.detener();
+        
+    }//GEN-LAST:event_btDesconectarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -183,6 +201,7 @@ public class Cliente extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btConectar;
+    private javax.swing.JButton btDesconectar;
     private javax.swing.JButton btEnviar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

@@ -24,7 +24,7 @@ public class Conexion extends Thread {
     private final String ip;
     private final int port;
     private final int nroIntentos;
-    private final int tiempoEntreIntento=3000;
+    private final int tiempoEntreIntento=2000;
     private ArrayList listeners;
     
     public Conexion(String ip, int port, int nroIntentos){
@@ -39,7 +39,7 @@ public class Conexion extends Thread {
     }
     
     public void Detener(){
-        
+        this.interrupt();
     }
     
     public void addListenerEvent(ConexionListener conexionListener){
