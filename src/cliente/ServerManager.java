@@ -20,7 +20,7 @@ import eventos.ServerManagerListener;
  *
  * @author Grover
  */
-public class ServerManager implements Runnable{
+public class ServerManager extends Thread{
     
     private Socket socket=null;
     private DataInputStream in=null;
@@ -48,10 +48,16 @@ public class ServerManager implements Runnable{
         listeners.clear();
     }
     
+    public void iniciar(){
+        connected=true;
+        start();
+    }
+    
     public void detener(){
         try {
             connected=false;
             in.close();
+            this.interrupt();
         } catch (IOException ex) {
             Logger.getLogger(ServerManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -77,7 +83,6 @@ public class ServerManager implements Runnable{
                     ServerManagerEvent evObj = new ServerManagerEvent(exSo.getMessage());
                     (listener).onDisconnectClient(evObj);
                 }
-                
                 connected=false;
             }catch (java.io.EOFException eofEx){    // cierre de socket del servidor
                 System.out.println("ERR:: el servidor Cerro"+ eofEx.getMessage());

@@ -54,7 +54,7 @@ public class Cliente extends javax.swing.JFrame {
             }
         });
 
-        txIp.setText("192.168.43.34");
+        txIp.setText("192.168.43.35");
 
         txPort.setText("4455");
 
@@ -203,7 +203,9 @@ public class Cliente extends javax.swing.JFrame {
 
     private void btDesconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDesconectarActionPerformed
         // TODO add your handling code here:
-        clienteSocket.detener();
+        clienteSocket.detenerCliente();
+        btConectar.setEnabled(true);
+        //clienteSocket.detener();
         
     }//GEN-LAST:event_btDesconectarActionPerformed
 

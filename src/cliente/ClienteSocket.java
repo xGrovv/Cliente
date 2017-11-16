@@ -27,12 +27,13 @@ public class ClienteSocket {
     private Socket socket=null;
     private final String ip;
     private final int port;
-    private final int nroIntentos=4;
+    //private final int nroIntentos=4;
     private ConnectionObserver connectionObserver;
     private ServerManager serverManager;
     private boolean deteniendo;
+    private boolean enable;
     
-    private String msjrec = "";    
+    private String msjrec = "";
     private JTextField msjrecibido = new JTextField();
     
     public ClienteSocket(String ip, int port){
@@ -41,6 +42,7 @@ public class ClienteSocket {
         connectionObserver=null;
         serverManager=null;
         deteniendo=false;
+        enable = false;
     }
     
     public Socket getSocket() {
@@ -62,6 +64,8 @@ public class ClienteSocket {
             @Override
             public void onDisconnectClient(ServerManagerEvent ev) {
                 // mandar a reconectar
+                if (!enable)
+                    return;
                 if (!deteniendo){
                     detener();
                     iniciar();
@@ -77,14 +81,15 @@ public class ClienteSocket {
             }
         });
         
-        Runnable serverManagerRun = serverManager;
-        Thread hilo = new Thread(serverManagerRun);
-        hilo.start();
+        
+        serverManager.iniciar();
         
         connectionObserver= new ConnectionObserver(socket);
         connectionObserver.addListener(new ConnectionObserverListener() {
             @Override
             public void onLostConnection(ConnectionObserverEvent ev) {
+                if (!enable)
+                    return;
                 deteniendo=true;
                 detener();
                 iniciar();
@@ -99,7 +104,8 @@ public class ClienteSocket {
     }
     
     public void iniciar(){
-        Conexion conexion = new Conexion(ip, port, nroIntentos);
+        enable = true;
+        Conexion conexion = new Conexion(ip, port);
         conexion.addListenerEvent(new ConexionListener() {
             @Override
             public void onConnect(ConexionEvent ev) {
@@ -113,6 +119,11 @@ public class ClienteSocket {
         });
         
         conexion.Conectar(); // metodo que lanza un hilo
+    }
+    
+    public void detenerCliente(){
+        enable=false;
+        detener();
     }
     
     public void detener(){
