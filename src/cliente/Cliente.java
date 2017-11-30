@@ -180,10 +180,10 @@ public class Cliente extends javax.swing.JFrame {
     } 
     
     private void enviandoMsj(){
-         if (clienteSocket.EnviarMensaje(txEnviar.getText())) {
+            clienteSocket.EnviarMensaje(txEnviar.getText());
             jTextArea1.append( "Cliente : " + txEnviar.getText()+ "\n");
             txEnviar.setText("");
-            }
+            
     }
     
     private void btConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConectarActionPerformed

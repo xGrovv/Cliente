@@ -5,6 +5,8 @@
  */
 package cliente;
 
+import eventos.ClienteSocketEvent;
+import eventos.ClienteSocketListener;
 import eventos.ConexionEvent;
 import eventos.ConexionListener;
 import eventos.ConnectionObserverEvent;
@@ -14,6 +16,8 @@ import eventos.ServerManagerListener;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
@@ -32,6 +36,8 @@ public class ClienteSocket {
     private ServerManager serverManager;
     private boolean deteniendo;
     private boolean enable;
+    private Long idDate;
+    private ArrayList listeners;
     
     private String msjrec = "";
     private JTextField msjrecibido = new JTextField();
@@ -43,6 +49,16 @@ public class ClienteSocket {
         serverManager=null;
         deteniendo=false;
         enable = false;
+        idDate=null;
+        listeners= new ArrayList();
+    }
+
+    public Long getIdDate() {
+        return idDate;
+    }
+
+    public void setIdDate(Long idDate) {
+        this.idDate = idDate;
     }
     
     public Socket getSocket() {
@@ -55,6 +71,10 @@ public class ClienteSocket {
     //////////////
     public JTextField getMsjrecibido() {
         return msjrecibido;
+    }
+    
+    public void addListenerEvent(ClienteSocketListener clienteSocketListener){
+        listeners.add(clienteSocketListener);
     }
     
     public void Connect_Action(ConexionEvent ev){
@@ -71,14 +91,28 @@ public class ClienteSocket {
                     iniciar();
                 }
                 deteniendo=false;
+                ListIterator li = listeners.listIterator();
+                while (li.hasNext()) {
+                    ClienteSocketListener listener = (ClienteSocketListener) li.next();
+                    ClienteSocketEvent evObj = new ClienteSocketEvent(ev);
+                    (listener).onLostConnection(evObj);
+                }
                 //System.out.println("se Perdio la conexion con el servidoe servidor: "+ ev.toString());
             }
             @Override
             public void onReceiveMessage(ServerManagerEvent ev) {
-                System.out.println("mensaje del servidor: "+ (String)ev.getSource());
-                msjrec =  ( (String)ev.getSource() );
-                msjrecibido.setText(msjrec);
+                ListIterator li = listeners.listIterator();
+                while (li.hasNext()) {
+                    ClienteSocketListener listener = (ClienteSocketListener) li.next();
+                    ClienteSocketEvent evObj = new ClienteSocketEvent((String)ev.getSource());
+                    (listener).onMessageReceive(evObj);
+                }
+//                System.out.println("mensaje del servidor: "+ (String)ev.getSource());
+//                msjrec =  ( (String)ev.getSource() );
+//                msjrecibido.setText(msjrec);
             }
+            
+            
         });
         
         
@@ -93,10 +127,23 @@ public class ClienteSocket {
                 deteniendo=true;
                 detener();
                 iniciar();
-                
+                ListIterator li = listeners.listIterator();
+                while (li.hasNext()) {
+                    ClienteSocketListener listener = (ClienteSocketListener) li.next();
+                    ClienteSocketEvent evObj = new ClienteSocketEvent(ev);
+                    (listener).onLostConnection(evObj);
+                }
             }
         });
         connectionObserver.iniciar();
+        
+        ListIterator li = listeners.listIterator();
+        while (li.hasNext()) {
+            ClienteSocketListener listener = (ClienteSocketListener) li.next();
+            ClienteSocketEvent evObj = new ClienteSocketEvent(this);
+            (listener).onConnected(evObj);
+        }
+        
     }
     
     public void NoConnect_Action(ConexionEvent ev){
@@ -117,7 +164,6 @@ public class ClienteSocket {
                 NoConnect_Action(ev);
             }
         });
-        
         conexion.Conectar(); // metodo que lanza un hilo
     }
     
@@ -149,17 +195,17 @@ public class ClienteSocket {
         }
     }*/
     
-    public boolean EnviarMensaje(String mensaje){
-        boolean enviado = false;
+    public void EnviarMensaje(String mensaje){
+        
         try {
             DataOutputStream out = new DataOutputStream (socket.getOutputStream());
             TaskSend messageSend = new TaskSend(out, mensaje);
             messageSend.start();
-            enviado =true;
+            
         } catch (IOException ex) {
             Logger.getLogger(ClienteSocket.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return enviado;
+        
     }
     
 }

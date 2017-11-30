@@ -65,9 +65,9 @@ public class ConnectionObserver extends Thread{
               boolean reachable;
                try {
                    reachable = (java.lang.Runtime.getRuntime().exec("ping -n 1 "+address).waitFor()==0);
-                    if(reachable)
-                        System.out.println("activo funca ip isReachable -->"+address);
-                    else
+                    if(!reachable)
+                        //System.out.println("activo funca ip isReachable -->"+address);
+                    //else
                         System.out.println("no funciona ip isReachable -->"+address);
                     return reachable;
                } catch (InterruptedException ex) {
