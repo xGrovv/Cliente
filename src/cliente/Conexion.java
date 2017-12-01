@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.ListIterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -50,14 +48,14 @@ public class Conexion extends Thread {
         listeners.add(conexionListener);
     }
     
-    public void pasatiempo(){
+    /*public void pasatiempo(){
         try {
             sleep(tiempoEntreIntento);
         } catch (InterruptedException ex1) {
             System.out.println("Conexion.pasatiempo: Esperando para intentar conectar");
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, ex1);
         }
-    }
+    }*/
     
     @Override
     public void run() {
