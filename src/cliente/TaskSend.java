@@ -22,7 +22,7 @@ public class TaskSend extends Thread {
     public TaskSend(DataOutputStream dataOut, String mensaje){
         this.out=dataOut;
         this.mensaje=mensaje;
-        
+
     }
     
     @Override
