@@ -65,9 +65,6 @@ public class ClienteSocket {
         return socket;
     }
     
-    public String getMsjrec() {
-        return msjrec;
-    }
     //////////////
     public JTextField getMsjrecibido() {
         return msjrecibido;
@@ -107,36 +104,31 @@ public class ClienteSocket {
                     ClienteSocketEvent evObj = new ClienteSocketEvent((String)ev.getSource());
                     (listener).onMessageReceive(evObj);
                 }
-//                System.out.println("mensaje del servidor: "+ (String)ev.getSource());
-//                msjrec =  ( (String)ev.getSource() );
-//                msjrecibido.setText(msjrec);
             }
             
             
         });
-        
-        
         serverManager.iniciar();
-        
         connectionObserver= new ConnectionObserver(socket);
-        connectionObserver.addListener(new ConnectionObserverListener() {
-            @Override
-            public void onLostConnection(ConnectionObserverEvent ev) {
-                if (!enable)
-                    return;
-                deteniendo=true;
-                detener();
-                iniciar();
-                ListIterator li = listeners.listIterator();
-                while (li.hasNext()) {
-                    ClienteSocketListener listener = (ClienteSocketListener) li.next();
-                    ClienteSocketEvent evObj = new ClienteSocketEvent(ev);
-                    (listener).onLostConnection(evObj);
+        if(!"localhost".equals(ip)){
+            connectionObserver.addListener(new ConnectionObserverListener() {
+                @Override
+                public void onLostConnection(ConnectionObserverEvent ev) {
+                    if (!enable)
+                        return;
+                    deteniendo=true;
+                    detener();
+                    iniciar();
+                    ListIterator li = listeners.listIterator();
+                    while (li.hasNext()) {
+                        ClienteSocketListener listener = (ClienteSocketListener) li.next();
+                        ClienteSocketEvent evObj = new ClienteSocketEvent(ev);
+                        (listener).onLostConnection(evObj);
+                    }
                 }
-            }
-        });
-        connectionObserver.iniciar();
-        
+            });
+            connectionObserver.iniciar();
+        }
         ListIterator li = listeners.listIterator();
         while (li.hasNext()) {
             ClienteSocketListener listener = (ClienteSocketListener) li.next();
@@ -177,7 +169,6 @@ public class ClienteSocket {
             connectionObserver.detener();
             serverManager.detener();
             socket.close();
-            //this.finalze();
         } catch (IOException ex) {
             Logger.getLogger(ClienteSocket.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Throwable ex) {
@@ -185,18 +176,7 @@ public class ClienteSocket {
         }
     }
     
-    /*public void EnviarMenasaje(String mensaje){
-        try {
-            DataOutputStream out = new DataOutputStream (socket.getOutputStream());
-            TaskSend messageSend = new TaskSend(out, mensaje);
-            messageSend.start();
-        } catch (IOException ex) {
-            Logger.getLogger(ClienteSocket.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }*/
-    
     public void EnviarMensaje(String mensaje){
-        
         try {
             DataOutputStream out = new DataOutputStream (socket.getOutputStream());
             TaskSend messageSend = new TaskSend(out, mensaje);
@@ -205,7 +185,6 @@ public class ClienteSocket {
         } catch (IOException ex) {
             Logger.getLogger(ClienteSocket.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
     
 }

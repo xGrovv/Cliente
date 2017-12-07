@@ -24,13 +24,11 @@ public class ServerManager extends Thread{
     
     private Socket socket=null;
     private DataInputStream in=null;
-    //private String message;
     private ArrayList listeners;
     private boolean connected;
     
     public ServerManager(Socket socket){
         this.socket=socket;
-        //message = "";
         connected = true;
         listeners= new ArrayList();
         try {
@@ -76,7 +74,7 @@ public class ServerManager extends Thread{
                     (listener).onReceiveMessage(evObj);
                 }
             }catch (SocketException exSo){  // por cierre de applicacion del server
-                System.out.println("El servidor detuvo el servicio:: "+ exSo.getMessage());
+                System.out.println("cliente.ServerManager.run()"+":::El servidor detuvo el servicio> "+ exSo.getMessage());
                 ListIterator li = listeners.listIterator();
                 while (li.hasNext()) {
                     ServerManagerListener listener = (ServerManagerListener) li.next();
@@ -85,7 +83,7 @@ public class ServerManager extends Thread{
                 }
                 connected=false;
             }catch (java.io.EOFException eofEx){    // cierre de socket del servidor
-                System.out.println("ERR:: el servidor Cerro"+ eofEx.getMessage());
+                System.out.println("cliente.ServerManager.run()"+":::ERR:: el servidor Cerro> "+eofEx.getMessage());
                 /*ListIterator li = listeners.listIterator();
                 while (li.hasNext()) {
                     ServerManagerListener listener = (ServerManagerListener) li.next();
