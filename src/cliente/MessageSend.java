@@ -14,23 +14,23 @@ import java.util.logging.Logger;
  *
  * @author Grover
  */
-public class TaskSend extends Thread {
+public class MessageSend extends Thread {
     
-    private DataOutputStream out=null;
+    private final DataOutputStream out;
     private final String mensaje;
     
-    public TaskSend(DataOutputStream dataOut, String mensaje){
+    public MessageSend(DataOutputStream dataOut, String mensaje){
         this.out=dataOut;
         this.mensaje=mensaje;
-
     }
     
     @Override
     public void run() {
         try {
             out.writeUTF(this.mensaje);
+            out.flush();
         } catch (IOException ex) {
-            Logger.getLogger(TaskSend.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MessageSend.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

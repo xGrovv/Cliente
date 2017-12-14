@@ -31,15 +31,12 @@ public class ClienteSocket {
     private Socket socket=null;
     private final String ip;
     private final int port;
-    //private final int nroIntentos=4;
     private ConnectionObserver connectionObserver;
     private ServerManager serverManager;
     private boolean deteniendo;
     private boolean enable;
-    private Long idDate;
     private ArrayList listeners;
     
-    private String msjrec = "";
     private JTextField msjrecibido = new JTextField();
     
     public ClienteSocket(String ip, int port){
@@ -49,25 +46,11 @@ public class ClienteSocket {
         serverManager=null;
         deteniendo=false;
         enable = false;
-        idDate=null;
         listeners= new ArrayList();
-    }
-
-    public Long getIdDate() {
-        return idDate;
-    }
-
-    public void setIdDate(Long idDate) {
-        this.idDate = idDate;
     }
     
     public Socket getSocket() {
         return socket;
-    }
-    
-    //////////////
-    public JTextField getMsjrecibido() {
-        return msjrecibido;
     }
     
     public void addListenerEvent(ClienteSocketListener clienteSocketListener){
@@ -94,8 +77,8 @@ public class ClienteSocket {
                     ClienteSocketEvent evObj = new ClienteSocketEvent(ev);
                     (listener).onLostConnection(evObj);
                 }
-                //System.out.println("se Perdio la conexion con el servidoe servidor: "+ ev.toString());
             }
+            
             @Override
             public void onReceiveMessage(ServerManagerEvent ev) {
                 ListIterator li = listeners.listIterator();
@@ -105,7 +88,6 @@ public class ClienteSocket {
                     (listener).onMessageReceive(evObj);
                 }
             }
-            
             
         });
         serverManager.iniciar();
@@ -179,9 +161,8 @@ public class ClienteSocket {
     public void EnviarMensaje(String mensaje){
         try {
             DataOutputStream out = new DataOutputStream (socket.getOutputStream());
-            TaskSend messageSend = new TaskSend(out, mensaje);
+            MessageSend messageSend = new MessageSend(out, mensaje);
             messageSend.start();
-            
         } catch (IOException ex) {
             Logger.getLogger(ClienteSocket.class.getName()).log(Level.SEVERE, null, ex);
         }

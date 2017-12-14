@@ -5,22 +5,24 @@
  */
 package cliente;
 
-import java.awt.Color;
+import eventos.ClienteSocketEvent;
+import eventos.ClienteSocketListener;
+import java.net.Socket;
 
 /**
  *
  * @author Grover
  */
-public class Cliente extends javax.swing.JFrame {
+public class GUI_Client extends javax.swing.JFrame {
 
-    ClienteSocket clienteSocket;
+    private ClienteSocket clienteSocket;
     
     /**
-     * Creates new form Cliente
+     * Creates new form GUI_Client
      */
-    public Cliente() {
+    public GUI_Client() {
         initComponents();
-        inicioComponentes();
+        
     }
 
     /**
@@ -32,6 +34,8 @@ public class Cliente extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
         btConectar = new javax.swing.JButton();
         txIp = new javax.swing.JTextField();
@@ -39,13 +43,14 @@ public class Cliente extends javax.swing.JFrame {
         lbIp = new javax.swing.JLabel();
         lbPort = new javax.swing.JLabel();
         btDesconectar = new javax.swing.JButton();
-        txEnviar = new javax.swing.JTextField();
         btEnviar = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txEnviar = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Cliente Socket");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         btConectar.setText("Conectar");
         btConectar.addActionListener(new java.awt.event.ActionListener() {
@@ -82,12 +87,12 @@ public class Cliente extends javax.swing.JFrame {
                     .addComponent(btConectar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lbPort, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txPort))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(28, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbIp)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txIp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -102,12 +107,6 @@ public class Cliente extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        txEnviar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txEnviarActionPerformed(evt);
-            }
-        });
-
         btEnviar.setText("Enviar");
         btEnviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -115,9 +114,11 @@ public class Cliente extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txEnviarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -127,7 +128,7 @@ public class Cliente extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
@@ -143,9 +144,9 @@ public class Cliente extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btEnviar))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -153,67 +154,58 @@ public class Cliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void inicioComponentes() {        
-        txEnviar.setForeground(Color.BLACK);
-        btEnviar.setEnabled(false);
-        txEnviar.setEnabled(false);        
-        btConectar.setEnabled(true);
-        btDesconectar.setEnabled(false);        
-        jTextArea1.setEnabled(false);
-               
-    }
-    
-    private void iniciarConexion() {
-        btEnviar.setEnabled(true);
-        txEnviar.setEnabled(true);        
-        btConectar.setEnabled(false);
-        btDesconectar.setEnabled(true);
-        jTextArea1.setEnabled(true);
-    }
-    
-    private void cerrarConexion() {
-        btEnviar.setEnabled(false);
-        txEnviar.setEnabled(false);        
-        btConectar.setEnabled(true);
-        btDesconectar.setEnabled(false);
-        jTextArea1.setEnabled(false);
-    } 
-    
-    private void enviandoMsj(){
-            clienteSocket.EnviarMensaje(txEnviar.getText());
-            jTextArea1.append( "Cliente : " + txEnviar.getText()+ "\n");
-            txEnviar.setText("");
-    }
-    
     private void btConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConectarActionPerformed
         // TODO add your handling code here:
         String ip = txIp.getText();
         int port = Integer.parseInt(txPort.getText());
         clienteSocket = new ClienteSocket(ip, port);
-        clienteSocket.iniciar();
-        iniciarConexion();
-    }//GEN-LAST:event_btConectarActionPerformed
+        clienteSocket.addListenerEvent(new ClienteSocketListener() {
+            @Override
+            public void onConnected(ClienteSocketEvent ev) {
+                jTextArea1.append( "Conectado al Servidor:" + "\n");
+            }
 
-    private void btEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEnviarActionPerformed
-        // TODO add your handling code here:
-        clienteSocket.EnviarMensaje(txEnviar.getSelectedText());
-        ///boolean se=clienteSocket.EnviarMenasaje(txEnviar.getText());
-    }//GEN-LAST:event_btEnviarActionPerformed
+            @Override
+            public void onLostConnection(ClienteSocketEvent ev) {
+                jTextArea1.append( "Conexion al Servidor Perdido:" + "\n");
+            }
+
+            @Override
+            public void onFailConnection(ClienteSocketEvent ev) {
+                System.out.println("Intento de Conexion fallido..");
+            }
+
+            @Override
+            public void onMessageReceive(ClienteSocketEvent ev) {
+                String msj = (String)ev.getSource();
+                jTextArea1.append( "Server:> " + msj+ "\n");
+            }
+        });
+        clienteSocket.iniciar();
+    }//GEN-LAST:event_btConectarActionPerformed
 
     private void btDesconectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDesconectarActionPerformed
         // TODO add your handling code here:
         clienteSocket.detenerCliente();
-        btConectar.setEnabled(true);
-        //clienteSocket.detener();
-        
+
     }//GEN-LAST:event_btDesconectarActionPerformed
+
+    private void btEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEnviarActionPerformed
+        // TODO add your handling code here:
+        enviarMensaje();
+    }//GEN-LAST:event_btEnviarActionPerformed
 
     private void txEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txEnviarActionPerformed
         // TODO add your handling code here:
-        enviandoMsj();
+        enviarMensaje();
     }//GEN-LAST:event_txEnviarActionPerformed
 
-    
+    private void enviarMensaje(){
+        String texto = txEnviar.getText();
+        clienteSocket.EnviarMensaje(texto);
+        jTextArea1.append( "Yo:> " + texto+ "\n");
+        txEnviar.setText("");
+    }
     
     /**
      * @param args the command line arguments
@@ -232,20 +224,20 @@ public class Cliente extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Cliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Cliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Cliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Cliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Cliente().setVisible(true);
+                new GUI_Client().setVisible(true);
             }
         });
     }

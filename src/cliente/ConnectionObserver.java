@@ -60,17 +60,19 @@ public class ConnectionObserver extends Thread{
         }
     }
     
-    public boolean isReachable(String address){        
+    public boolean isReachable(String address){
+        if(("localhost".equals(address))||("127.0.0.1".equals(address)))
+            return true;
         try {          
-              boolean reachable;
-               try {
-                   reachable = (java.lang.Runtime.getRuntime().exec("ping -n 1 "+address).waitFor()==0);
-                    if(!reachable)
-                        System.out.println("no funciona ip isReachable -->"+address);
-                    return reachable;
-               } catch (InterruptedException ex) {
-                   Logger.getLogger(ConnectionObserver.class.getName()).log(Level.SEVERE, null, ex);
-               }          
+            boolean reachable;
+            try {
+                reachable = (java.lang.Runtime.getRuntime().exec("ping -n 1 "+address).waitFor()==0);
+                if(!reachable)
+                    System.out.println("no funciona ip isReachable -->"+address);
+                return reachable;
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ConnectionObserver.class.getName()).log(Level.SEVERE, null, ex);
+            }          
         } catch (IOException ex) {
             Logger.getLogger(ConnectionObserver.class.getName()).log(Level.SEVERE, null, ex);
         }   return false;        
